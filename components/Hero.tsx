@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowRight, Flame } from "lucide-react";
 import { useLenis } from "@/components/SmoothScrollProvider";
-import { HERO_IMAGE, HERO_SECONDARY_IMAGE, PRODUCTS } from "@/lib/data";
+import { HERO_IMAGE, PRODUCTS } from "@/lib/data";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -24,12 +24,11 @@ const fadeUp = {
   },
 };
 
+const CATEGORY_COUNT = new Set(PRODUCTS.map((p) => p.category)).size;
+
 const STATS = [
   { value: `${PRODUCTS.length}`, label: "Models" },
-  {
-    value: `${Object.keys(new Set(PRODUCTS.map((p) => p.category))).length}`,
-    label: "Categories",
-  },
+  { value: `${CATEGORY_COUNT}`, label: "Categories" },
   { value: "4.8", label: "Avg. rating" },
 ];
 

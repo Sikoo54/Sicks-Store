@@ -8,6 +8,7 @@ import FilterBar from "@/components/FilterBar";
 import ProductGrid from "@/components/ProductGrid";
 import ProductModal from "@/components/ProductModal";
 import NewsSection from "@/components/NewsSection";
+import FeaturedShowcase from "@/components/FeaturedShowcase";
 import CategoryTiles from "@/components/CategoryTiles";
 import Footer from "@/components/Footer";
 import { useCart } from "@/context/CartContext";
@@ -97,6 +98,7 @@ export default function Home() {
         </section>
 
         <NewsSection />
+        <FeaturedShowcase />
         <CategoryTiles />
       </main>
 
