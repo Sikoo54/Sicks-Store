@@ -9,6 +9,7 @@ const img = (file: string) => `/images/${file}`;
 
 export const HERO_IMAGE = img("hero.jpg");
 export const HERO_SECONDARY_IMAGE = img("vapor-glide.jpg");
+export const courtSurgeImage = img("court-surge-01.jpg");
 
 export const CATEGORY_META: Record<Category, CategoryMeta> = {
   shoes: {

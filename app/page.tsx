@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
+import QuoteSection from "@/components/QuoteSection";
 import FilterBar from "@/components/FilterBar";
 import ProductGrid from "@/components/ProductGrid";
 import ProductModal from "@/components/ProductModal";
@@ -58,6 +59,7 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <Marquee />
+        <QuoteSection />
 
         <section id="featured" className="scroll-mt-24 bg-chalk">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
