@@ -1,13 +1,19 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { Dribbble, Instagram, Twitter, Youtube } from "lucide-react";
-import { CATEGORY_META, CATEGORY_ORDER } from "@/lib/data";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 const SUPPORT_LINKS = ["Shipping", "Returns", "Size guide", "Contact"];
+
+const WHY_SICKS = [
+  "Free shipping over $100",
+  "30-day easy returns",
+  "Authentic guarantee",
+  "Secure checkout",
+  "Ships worldwide",
+];
 
 const SOCIALS = [
   { label: "Instagram", icon: Instagram },
@@ -50,21 +56,15 @@ export default function Footer() {
 
           <div>
             <p className="font-display text-xs font-bold uppercase tracking-[0.2em] text-chalk/40">
-              Categories
+              Why SICKS
             </p>
             <ul className="mt-4 space-y-2.5">
-              {CATEGORY_ORDER.map((c) => (
-                <li key={c}>
-                  <Link
-                    href={`/category/${c}`}
-                    className="flex items-center gap-2 text-sm text-chalk/65 transition hover:text-chalk"
-                  >
-                    <span
-                      className="h-2 w-2"
-                      style={{ backgroundColor: CATEGORY_META[c].color }}
-                    />
-                    {CATEGORY_META[c].label}
-                  </Link>
+              {WHY_SICKS.map((item) => (
+                <li key={item}>
+                  <span className="flex items-center gap-2 text-sm text-chalk/65">
+                    <span className="text-cobalt">✓</span>
+                    {item}
+                  </span>
                 </li>
               ))}
             </ul>
