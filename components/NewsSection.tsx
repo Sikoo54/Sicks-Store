@@ -8,7 +8,15 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function NewsSection() {
   return (
-    <section id="news" className="scroll-mt-24 bg-chalk">
+    <section id="news" className="relative isolate scroll-mt-24 overflow-hidden bg-chalk">
+      <div aria-hidden className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 halftone opacity-[0.45]" />
+        <div className="absolute inset-0 grain opacity-[0.04] mix-blend-overlay" />
+        <div className="absolute -left-20 top-10 h-72 w-72 rounded-full bg-green/10" />
+        <div className="absolute -right-24 bottom-24 h-80 w-80 rounded-full bg-violet/10" />
+        <div className="absolute left-1/3 bottom-10 h-40 w-40 rounded-full bg-red/10" />
+      </div>
+
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>

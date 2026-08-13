@@ -61,10 +61,27 @@ export default function Home() {
         <Marquee />
         <QuoteSection />
 
-        <section id="featured" className="scroll-mt-24 bg-chalk">
+        <section id="featured" className="relative isolate scroll-mt-24 overflow-hidden bg-chalk">
+          <div aria-hidden className="absolute inset-0 -z-10">
+            <div className="absolute inset-0 halftone-dense opacity-[0.12]" />
+            <div className="absolute inset-0 halftone opacity-[0.45]" />
+            <div className="absolute inset-0 grain opacity-[0.04] mix-blend-overlay" />
+            <div className="absolute -right-20 top-16 h-72 w-72 rounded-full bg-cobalt/10" />
+            <div className="absolute -left-24 bottom-24 h-80 w-80 rounded-full bg-orange/10" />
+            <div className="absolute right-1/4 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full bg-violet/10" />
+            <div className="absolute left-1/4 top-10 h-28 w-28 rounded-full bg-cobalt/15" />
+            <div className="absolute left-[10%] top-1/3 h-48 w-48 rounded-full bg-orange/15" />
+            <div className="absolute left-2/3 bottom-8 h-24 w-24 rounded-full bg-violet/15" />
+            <div className="absolute left-[40%] bottom-16 h-14 w-14 rounded-full bg-green/15" />
+          </div>
+
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
             <div className="flex flex-wrap items-end justify-between gap-6">
-              <div>
+              <div className="relative">
+                <div
+                  aria-hidden
+                  className="halftone-dense absolute -left-6 -top-4 -z-10 h-40 w-64 opacity-30"
+                />
                 <p className="font-display text-xs font-bold uppercase tracking-[0.25em] text-cobalt">
                   The weekly drop
                 </p>
