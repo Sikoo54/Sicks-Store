@@ -9,6 +9,7 @@ import FilterBar from "@/components/FilterBar";
 import ProductGrid from "@/components/ProductGrid";
 import ProductModal from "@/components/ProductModal";
 import Footer from "@/components/Footer";
+import SmoothScroll from "@/components/SmoothScroll";
 import { useCart } from "@/context/CartContext";
 import { FEATURED, defaultSizeLabel } from "@/lib/data";
 
@@ -67,6 +68,7 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <SmoothScroll />
       <main className="flex-1">
         <Hero />
         <Marquee />
