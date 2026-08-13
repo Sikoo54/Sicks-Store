@@ -1,10 +1,23 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Lenis from "lenis";
 
+const DESKTOP = "(min-width: 1024px)";
+
 export default function SmoothScroll() {
+  const [enabled, setEnabled] = useState(false);
+
   useEffect(() => {
+    const mq = window.matchMedia(DESKTOP);
+    const update = () => setEnabled(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (!enabled) return;
     const lenis = new Lenis({
       lerp: 0.09,
       smoothWheel: true,
@@ -35,7 +48,7 @@ export default function SmoothScroll() {
       bodyObserver.disconnect();
       lenis.destroy();
     };
-  }, []);
+  }, [enabled]);
 
   return null;
 }
