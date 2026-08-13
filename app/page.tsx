@@ -1,19 +1,30 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { AnimatePresence } from "framer-motion";
 import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
-import QuoteSection from "@/components/QuoteSection";
 import FilterBar from "@/components/FilterBar";
 import ProductGrid from "@/components/ProductGrid";
 import ProductModal from "@/components/ProductModal";
-import NewsSection from "@/components/NewsSection";
-import FeaturedShowcase from "@/components/FeaturedShowcase";
-import CategoryTiles from "@/components/CategoryTiles";
 import Footer from "@/components/Footer";
 import { useCart } from "@/context/CartContext";
 import { FEATURED, defaultSizeLabel } from "@/lib/data";
+
+const QuoteSection = dynamic(() => import("@/components/QuoteSection"), {
+  ssr: false,
+});
+const FeaturedShowcase = dynamic(
+  () => import("@/components/FeaturedShowcase"),
+  { ssr: false }
+);
+const NewsSection = dynamic(() => import("@/components/NewsSection"), {
+  ssr: false,
+});
+const CategoryTiles = dynamic(() => import("@/components/CategoryTiles"), {
+  ssr: false,
+});
 import type { Product, SortOption } from "@/types";
 
 export default function Home() {

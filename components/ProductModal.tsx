@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Check, Minus, Plus, Star, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { useLenis } from "@/components/SmoothScrollProvider";
 import { CATEGORY_META, defaultSizeLabel, sizeLabel } from "@/lib/data";
 import type { Product } from "@/types";
 
@@ -16,7 +15,6 @@ interface ProductModalProps {
 
 export default function ProductModal({ product, onClose }: ProductModalProps) {
   const { addItem } = useCart();
-  const lenis = useLenis();
 
   const [color, setColor] = useState(product.colors[0]);
   const [size, setSize] = useState<string | null>(
@@ -31,7 +29,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
   }, [product]);
 
   useEffect(() => {
-    lenis?.stop();
+    document.body.style.overflow = "hidden";
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -40,9 +38,9 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
 
     return () => {
       window.removeEventListener("keydown", onKey);
-      lenis?.start();
+      document.body.style.overflow = "";
     };
-  }, [lenis, onClose]);
+  }, [onClose]);
 
   const handleAdd = () => {
     if (!size) return;

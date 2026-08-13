@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowRight, Flame } from "lucide-react";
-import { useLenis } from "@/components/SmoothScrollProvider";
 import { HERO_IMAGE, PRODUCTS } from "@/lib/data";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -33,18 +32,14 @@ const STATS = [
 ];
 
 export default function Hero() {
-  const lenis = useLenis();
-
   const goToFeatured = () => {
     const el = document.getElementById("featured");
-    if (lenis) lenis.scrollTo(el ?? 0);
-    else if (el) el.scrollIntoView({ behavior: "smooth" });
+    if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
   const goToNews = () => {
     const el = document.getElementById("news");
-    if (lenis) lenis.scrollTo(el ?? 0);
-    else if (el) el.scrollIntoView({ behavior: "smooth" });
+    if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -75,7 +70,6 @@ export default function Hero() {
           </motion.div>
 
           <motion.h1
-            variants={fadeUp}
             className="mt-7 font-display font-bold uppercase leading-[0.9] tracking-tight"
           >
             <span className="block text-[clamp(3.5rem,10vw,8rem)]">
@@ -137,8 +131,7 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        <motion.div
-          variants={fadeUp}
+        <div
           className="relative mx-auto w-full max-w-md lg:max-w-none"
         >
           <div
@@ -153,6 +146,7 @@ export default function Hero() {
                   src={HERO_IMAGE}
                   alt="SICKS flagship sneaker"
                   fill
+                  priority
                   sizes="(max-width: 768px) 100vw, 40vw"
                   className="object-cover"
                 />
@@ -160,20 +154,12 @@ export default function Hero() {
               </div>
             </div>
 
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{
-                duration: 4.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="absolute -right-4 top-8 w-36 -rotate-6 bg-orange px-4 py-3 font-display font-bold uppercase leading-tight text-ink shadow-card sm:-right-8"
-            >
+            <div className="absolute -right-4 top-8 w-36 -rotate-6 animate-float-y bg-orange px-4 py-3 font-display font-bold uppercase leading-tight text-ink shadow-card sm:-right-8">
               New drop
               <span className="block text-xs font-semibold tracking-wider opacity-70">
                 FW26
               </span>
-            </motion.div>
+            </div>
 
             <div className="absolute -left-4 bottom-10 w-40 rotate-3 bg-chalk px-4 py-3 text-ink shadow-card sm:-left-8">
               <p className="text-[10px] font-bold uppercase tracking-wider text-ink/50">
@@ -182,7 +168,7 @@ export default function Hero() {
               <p className="font-display text-2xl font-bold">$149</p>
             </div>
           </div>
-        </motion.div>
+        </div>
       </motion.div>
     </section>
   );

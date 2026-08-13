@@ -1,21 +1,20 @@
 import type { Metadata } from "next";
 import { Barlow_Condensed, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import "lenis/dist/lenis.css";
-import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import { CartProvider } from "@/context/CartContext";
 import Navbar from "@/components/Navbar";
 import AppUI from "@/components/AppUI";
 
 const barlowCondensed = Barlow_Condensed({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["600", "700"],
   variable: "--font-display",
   display: "swap",
 });
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
+  weight: ["400", "600", "700"],
   variable: "--font-body",
   display: "swap",
 });
@@ -34,13 +33,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${barlowCondensed.variable} ${spaceGrotesk.variable}`}>
       <body>
-        <SmoothScrollProvider>
-          <CartProvider>
-            <Navbar />
-            {children}
-            <AppUI />
-          </CartProvider>
-        </SmoothScrollProvider>
+        <CartProvider>
+          <Navbar />
+          {children}
+          <AppUI />
+        </CartProvider>
       </body>
     </html>
   );

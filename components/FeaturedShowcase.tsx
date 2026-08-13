@@ -2,9 +2,48 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { Play } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+function LazyVideo() {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (!el.src) el.src = "/videos/showcase.mp4";
+            el.play().catch(() => {});
+          } else {
+            el.pause();
+          }
+        });
+      },
+      { rootMargin: "300px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <video
+      ref={ref}
+      className="h-full w-full object-cover"
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="none"
+      poster="/images/hero.jpg"
+    />
+  );
+}
 
 export default function FeaturedShowcase() {
   return (
@@ -32,15 +71,19 @@ export default function FeaturedShowcase() {
           transition={{ duration: 0.7, ease: EASE }}
           className="relative mt-10 aspect-video overflow-hidden bg-ink ring-1 ring-chalk/15"
         >
-          <video
-            className="h-full w-full object-cover"
-            src="/videos/showcase.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
+          <div className="absolute inset-0">
+            <Image
+              src="/images/hero.jpg"
+              alt=""
+              fill
+              priority={false}
+              sizes="(max-width: 768px) 100vw, 75vw"
+              className="object-cover opacity-90"
+            />
+          </div>
+          <div className="absolute inset-0">
+            <LazyVideo />
+          </div>
           <div className="absolute inset-0 bg-ink/35" />
           <div className="absolute inset-0 halftone opacity-15" />
           <div className="absolute inset-0 grain opacity-[0.06] mix-blend-overlay" />

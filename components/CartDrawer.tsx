@@ -13,7 +13,6 @@ import {
   X,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { useLenis } from "@/components/SmoothScrollProvider";
 
 const FREE_SHIPPING_THRESHOLD = 100;
 
@@ -27,13 +26,13 @@ export default function CartDrawer() {
     subtotal,
     checkout,
   } = useCart();
-  const lenis = useLenis();
 
   useEffect(() => {
-    if (isOpen) lenis?.stop();
-    else lenis?.start();
-    return () => lenis?.start();
-  }, [lenis, isOpen]);
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   const shipping =
     subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 9;
@@ -76,7 +75,7 @@ export default function CartDrawer() {
           </button>
         </div>
 
-        <div data-lenis-prevent className="flex-1 overflow-y-auto px-5 py-4">
+        <div className="flex-1 overflow-y-auto px-5 py-4">
           {items.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
               <motion.div
