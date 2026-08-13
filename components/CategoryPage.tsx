@@ -7,8 +7,7 @@ import { ArrowUpRight } from "lucide-react";
 import FilterBar from "./FilterBar";
 import ProductGrid from "./ProductGrid";
 import ProductModal from "./ProductModal";
-import { useCart } from "@/context/CartContext";
-import { CATEGORY_META, CATEGORY_ORDER, defaultSizeLabel } from "@/lib/data";
+import { CATEGORY_META, CATEGORY_ORDER } from "@/lib/data";
 import type { CategoryMeta, Product, SortOption } from "@/types";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -19,8 +18,6 @@ interface CategoryPageProps {
 }
 
 export default function CategoryPage({ meta, products }: CategoryPageProps) {
-  const { addItem } = useCart();
-
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortOption>("featured");
   const [selected, setSelected] = useState<Product | null>(null);
@@ -51,10 +48,6 @@ export default function CategoryPage({ meta, products }: CategoryPageProps) {
 
     return list;
   }, [products, search, sort]);
-
-  const quickAdd = (product: Product) => {
-    addItem(product, defaultSizeLabel(product), product.colors[0]);
-  };
 
   const others = CATEGORY_ORDER.filter((c) => c !== meta.slug);
 
@@ -122,7 +115,6 @@ export default function CategoryPage({ meta, products }: CategoryPageProps) {
             products={filtered}
             total={products.length}
             onSelect={setSelected}
-            onQuickAdd={quickAdd}
             onClear={() => {
               setSearch("");
               setSort("featured");

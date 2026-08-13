@@ -10,8 +10,7 @@ import ProductGrid from "@/components/ProductGrid";
 import ProductModal from "@/components/ProductModal";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
-import { useCart } from "@/context/CartContext";
-import { FEATURED, defaultSizeLabel } from "@/lib/data";
+import { FEATURED } from "@/lib/data";
 
 const QuoteSection = dynamic(() => import("@/components/QuoteSection"), {
   ssr: false,
@@ -29,8 +28,6 @@ const CategoryTiles = dynamic(() => import("@/components/CategoryTiles"), {
 import type { Product, SortOption } from "@/types";
 
 export default function Home() {
-  const { addItem } = useCart();
-
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortOption>("featured");
   const [selected, setSelected] = useState<Product | null>(null);
@@ -61,10 +58,6 @@ export default function Home() {
 
     return list;
   }, [search, sort]);
-
-  const quickAdd = (product: Product) => {
-    addItem(product, defaultSizeLabel(product), product.colors[0]);
-  };
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -120,7 +113,6 @@ export default function Home() {
               products={products}
               total={FEATURED.length}
               onSelect={setSelected}
-              onQuickAdd={quickAdd}
               onClear={() => {
                 setSearch("");
                 setSort("featured");

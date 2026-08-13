@@ -9,7 +9,6 @@ interface ProductGridProps {
   products: Product[];
   total: number;
   onSelect: (product: Product) => void;
-  onQuickAdd: (product: Product) => void;
   onClear: () => void;
 }
 
@@ -17,7 +16,6 @@ export default function ProductGrid({
   products,
   total,
   onSelect,
-  onQuickAdd,
   onClear,
 }: ProductGridProps) {
   return (
@@ -64,7 +62,6 @@ export default function ProductGrid({
               product={product}
               index={index}
               onSelect={onSelect}
-              onQuickAdd={onQuickAdd}
             />
           ))}
         </div>

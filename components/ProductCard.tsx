@@ -12,21 +12,14 @@ interface ProductCardProps {
   product: Product;
   index: number;
   onSelect: (product: Product) => void;
-  onQuickAdd: (product: Product) => void;
 }
 
 export default function ProductCard({
   product,
   index,
   onSelect,
-  onQuickAdd,
 }: ProductCardProps) {
   const color = CATEGORY_META[product.category].color;
-
-  const handleQuickAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    onQuickAdd(product);
-  };
 
   return (
     <motion.article
@@ -94,8 +87,11 @@ export default function ProductCard({
             ${product.price}
           </span>
           <button
-            onClick={handleQuickAdd}
-            aria-label={`Add ${product.name} to cart`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect(product);
+            }}
+            aria-label={`Choose ${product.name}`}
             className="grid h-10 w-10 place-items-center bg-ink text-chalk transition-colors duration-300 hover:bg-cobalt active:scale-95"
           >
             <Plus size={18} />
