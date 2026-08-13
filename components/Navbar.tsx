@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, Search, ShoppingBag, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import Logo from "./Logo";
 import { CATEGORY_META, CATEGORY_ORDER, PRODUCTS } from "@/lib/data";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -91,13 +92,10 @@ export default function Navbar() {
         <Link
           href="/"
           onClick={() => setMenuOpen(false)}
-          className="flex items-center gap-2 font-display text-2xl font-bold tracking-tight"
+          className="flex items-center gap-2"
           aria-label="SICKS home"
         >
-          <span className="grid h-3.5 w-3.5 place-items-center">
-            <span className="h-full w-full bg-cobalt" />
-          </span>
-          SICKS
+          <Logo />
         </Link>
 
         <div className="hidden items-center gap-1 lg:flex">

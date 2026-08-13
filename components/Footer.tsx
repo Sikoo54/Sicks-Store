@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Dribbble, Instagram, Twitter, Youtube } from "lucide-react";
+import Logo from "./Logo";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -30,10 +31,7 @@ export default function Footer() {
       <div className="relative mx-auto max-w-7xl px-4 pb-10 pt-16 sm:px-6 lg:px-8 lg:pt-20">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr]">
           <div>
-            <p className="flex items-center gap-2 font-display text-4xl font-bold tracking-tight">
-              <span className="h-4 w-4 bg-cobalt" />
-              SICKS
-            </p>
+            <Logo size="lg" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-chalk/55">
               Shoes, jerseys, shorts, tees and match-day extras. Engineered
               hard, dropped loud, every Friday.
