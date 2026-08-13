@@ -572,7 +572,7 @@ export const PRODUCTS: Product[] = [
   },
 ];
 
-export const FEATURED = PRODUCTS.filter((p) => p.featured);
+export const FEATURED = PRODUCTS.filter((p) => p.featured).slice(0, 4);
 
 export function productsByCategory(category: Category): Product[] {
   return PRODUCTS.filter((p) => p.category === category);
