@@ -65,7 +65,6 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <Marquee />
-        <QuoteSection />
 
         <section id="featured" className="relative isolate scroll-mt-24 overflow-hidden bg-chalk">
           <div aria-hidden className="absolute inset-0 -z-10">
@@ -122,6 +121,7 @@ export default function Home() {
         </section>
 
         <NewsSection />
+        <QuoteSection />
         <FeaturedShowcase />
         <CategoryTiles />
       </main>
