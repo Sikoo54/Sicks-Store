@@ -66,6 +66,8 @@ export default function Home() {
         <Hero />
         <Marquee />
 
+        <NewsSection />
+
         <section id="featured" className="relative isolate scroll-mt-24 overflow-hidden bg-chalk">
           <div aria-hidden className="absolute inset-0 -z-10">
             <div className="absolute inset-0 halftone-dense opacity-[0.12]" />
@@ -120,10 +122,9 @@ export default function Home() {
           </div>
         </section>
 
-        <NewsSection />
-        <QuoteSection />
         <FeaturedShowcase />
         <CategoryTiles />
+        <QuoteSection />
       </main>
 
       <Footer />
