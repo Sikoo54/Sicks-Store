@@ -4,6 +4,8 @@ import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import Navbar from "@/components/Navbar";
 import AppUI from "@/components/AppUI";
+import ScrollToTop from "@/components/ScrollToTop";
+import PrefetchCategories from "@/components/PrefetchCategories";
 
 const barlowCondensed = Barlow_Condensed({
   subsets: ["latin"],
@@ -34,6 +36,8 @@ export default function RootLayout({
     <html lang="en" className={`${barlowCondensed.variable} ${spaceGrotesk.variable}`}>
       <body>
         <CartProvider>
+          <ScrollToTop />
+          <PrefetchCategories />
           <Navbar />
           {children}
           <AppUI />

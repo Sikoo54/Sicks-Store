@@ -11,12 +11,14 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 interface ProductCardProps {
   product: Product;
   index: number;
+  priority?: boolean;
   onSelect: (product: Product) => void;
 }
 
 export default function ProductCard({
   product,
   index,
+  priority = false,
   onSelect,
 }: ProductCardProps) {
   const color = CATEGORY_META[product.category].color;
@@ -28,8 +30,8 @@ export default function ProductCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{
-        duration: 0.5,
-        delay: (index % 4) * 0.07,
+        duration: 0.35,
+        delay: (index % 4) * 0.04,
         ease: EASE,
       }}
       onClick={() => onSelect(product)}
@@ -42,6 +44,8 @@ export default function ProductCard({
           src={product.image}
           alt={product.name}
           fill
+          priority={priority}
+          fetchPriority={priority ? "high" : "auto"}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
