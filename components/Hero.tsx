@@ -69,9 +69,7 @@ export default function Hero() {
             FW26 · New drop live
           </motion.div>
 
-          <motion.h1
-            className="mt-7 font-display font-bold uppercase leading-[0.9] tracking-tight"
-          >
+          <motion.h1 className="mt-7 font-display font-bold uppercase leading-[0.9] tracking-tight">
             <span className="block text-[clamp(3.5rem,10vw,8rem)]">
               Rack up.
             </span>
@@ -131,9 +129,7 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        <div
-          className="relative mx-auto w-full max-w-md lg:max-w-none"
-        >
+        <div className="relative mx-auto w-full max-w-md lg:max-w-none">
           <div
             aria-hidden
             className="absolute -inset-8 -z-10 halftone-light opacity-60"
@@ -157,15 +153,15 @@ export default function Hero() {
             <div className="absolute -right-4 top-8 w-36 -rotate-6 animate-float-y bg-orange px-4 py-3 font-display font-bold uppercase leading-tight text-ink shadow-card sm:-right-8">
               New drop
               <span className="block text-xs font-semibold tracking-wider opacity-70">
-                FW26
+                jordan 4
               </span>
             </div>
 
             <div className="absolute -left-4 bottom-10 w-40 rotate-3 bg-chalk px-4 py-3 text-ink shadow-card sm:-left-8">
               <p className="text-[10px] font-bold uppercase tracking-wider text-ink/50">
-                Vapor Glide
+                jordan 4 'Comic'
               </p>
-              <p className="font-display text-2xl font-bold">$149</p>
+              <p className="font-display text-2xl font-bold">$249</p>
             </div>
           </div>
         </div>
