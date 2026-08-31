@@ -1,3 +1,4 @@
+// Category pills + search + sort dropdown for product listings.
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -34,6 +35,7 @@ export default function FilterBar({
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
 
+  // Close the sort menu on outside click.
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       if (sortRef.current && !sortRef.current.contains(e.target as Node)) {

@@ -1,3 +1,4 @@
+// Warms all category pages in the background so nav is instant.
 "use client";
 
 import { useEffect } from "react";

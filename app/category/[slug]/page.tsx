@@ -1,3 +1,4 @@
+// Category page (SSG): one statically generated page per category slug.
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import CategoryPage from "@/components/CategoryPage";

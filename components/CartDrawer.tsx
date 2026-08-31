@@ -1,3 +1,4 @@
+// Slide-in cart drawer: items, qty controls, shipping progress + checkout.
 "use client";
 
 import { useEffect } from "react";
@@ -25,8 +26,10 @@ export default function CartDrawer() {
     removeItem,
     subtotal,
     checkout,
+    isCheckingOut,
   } = useCart();
 
+  // Lock page scroll while the drawer is open.
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {
@@ -213,14 +216,24 @@ export default function CartDrawer() {
 
             <button
               onClick={checkout}
-              className="group mt-4 flex w-full items-center justify-center gap-2 bg-cobalt py-4 font-display text-sm font-bold uppercase tracking-wider text-white transition hover:bg-ink active:scale-[0.98]"
+              disabled={isCheckingOut}
+              className="group mt-4 flex w-full items-center justify-center gap-2 bg-cobalt py-4 font-display text-sm font-bold uppercase tracking-wider text-white transition hover:bg-ink active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Checkout · ${total.toFixed(2)}
-              <ArrowRight
-                size={18}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
+              {isCheckingOut ? (
+                "Memproses..."
+              ) : (
+                <>
+                  Checkout · ${total.toFixed(2)}
+                  <ArrowRight
+                    size={18}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </>
+              )}
             </button>
+            <p className="mt-2 text-center text-[11px] text-ink/40">
+              Pembayaran aman via Midtrans Snap
+            </p>
           </div>
         )}
       </motion.aside>

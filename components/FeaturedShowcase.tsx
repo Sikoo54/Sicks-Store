@@ -1,3 +1,4 @@
+// Video spotlight section; video plays only when scrolled into view.
 "use client";
 
 import { motion } from "framer-motion";
@@ -8,6 +9,7 @@ import { useEffect, useRef } from "react";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+// Lazy <video>: loads the file only when near the viewport (saves 5MB).
 function LazyVideo() {
   const ref = useRef<HTMLVideoElement>(null);
 

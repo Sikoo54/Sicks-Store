@@ -1,3 +1,4 @@
+// Site footer: brand blurb, socials, why-SICKS + support links, giant wordmark.
 "use client";
 
 import { motion } from "framer-motion";

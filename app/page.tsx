@@ -1,3 +1,4 @@
+// Home page: hero → marquee → news → featured grid → video → categories → quote.
 "use client";
 
 import { useMemo, useState } from "react";
@@ -32,6 +33,7 @@ export default function Home() {
   const [sort, setSort] = useState<SortOption>("featured");
   const [selected, setSelected] = useState<Product | null>(null);
 
+  // Filter + sort the featured drop client-side.
   const products = useMemo(() => {
     let list = [...FEATURED];
 

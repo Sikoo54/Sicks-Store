@@ -1,3 +1,4 @@
+// SICKS wordmark: cobalt lightning bolt + uppercase name, two sizes.
 interface LogoProps {
   size?: "sm" | "lg";
   light?: boolean;

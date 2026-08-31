@@ -1,5 +1,7 @@
+// Static store data: categories, products, news + image/size helpers.
 import type { Category, CategoryMeta, NewsItem, Product } from "@/types";
 
+// Maps a public image filename to its URL path.
 const img = (file: string) => `/images/${file}`;
 
 export const HERO_IMAGE = img("jordan-4-2.avif");
@@ -49,12 +51,14 @@ export const CATEGORY_ORDER = Object.keys(CATEGORY_META) as Category[];
 const usSizes = [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 12];
 const letterSizes = ["S", "M", "L", "XL", "XXL"];
 
+// Default pre-selected size when opening the product modal.
 export function defaultSizeLabel(p: Product): string {
   if (p.sizeType === "none") return "One Size";
   if (p.sizeType === "letter") return "L";
   return `US ${p.sizes[Math.floor(p.sizes.length / 2)]}`;
 }
 
+// Human-readable size label (US prefix for shoe sizes).
 export function sizeLabel(p: Product, s: number | string): string {
   if (p.sizeType === "us") return `US ${s}`;
   return String(s);

@@ -1,3 +1,4 @@
+// Home hero: headline, stats, CTA buttons + floating product image.
 "use client";
 
 import { motion } from "framer-motion";
@@ -32,6 +33,7 @@ const STATS = [
 ];
 
 export default function Hero() {
+  // Smooth-scroll to a section on this page.
   const goToFeatured = () => {
     const el = document.getElementById("featured");
     if (el) el.scrollIntoView({ behavior: "smooth" });

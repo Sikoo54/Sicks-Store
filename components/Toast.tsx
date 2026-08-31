@@ -1,3 +1,4 @@
+// Bottom-center toast showing cart feedback messages.
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";

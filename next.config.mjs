@@ -1,3 +1,4 @@
+// Next.js config: AVIF/WebP image formats + long image cache for perf.
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,

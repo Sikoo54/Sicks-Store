@@ -1,3 +1,4 @@
+// Full-screen brand quote with parallax background image.
 "use client";
 
 import { useRef } from "react";
@@ -14,6 +15,7 @@ export default function QuoteSection() {
   const words = QUOTE.split(" ");
   const ref = useRef<HTMLElement>(null);
 
+  // Parallax: image drifts and overlay fades as the section scrolls past.
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],

@@ -1,3 +1,4 @@
+// Root layout: fonts, cart state, navbar, global UI and navigation helpers.
 import type { Metadata } from "next";
 import { Barlow_Condensed, Space_Grotesk } from "next/font/google";
 import "./globals.css";
@@ -6,7 +7,9 @@ import Navbar from "@/components/Navbar";
 import AppUI from "@/components/AppUI";
 import ScrollToTop from "@/components/ScrollToTop";
 import PrefetchCategories from "@/components/PrefetchCategories";
+import MidtransScript from "@/components/MidtransScript";
 
+// Brand fonts, self-hosted via next/font (no FOUT / layout shift).
 const barlowCondensed = Barlow_Condensed({
   subsets: ["latin"],
   weight: ["600", "700"],
@@ -41,6 +44,7 @@ export default function RootLayout({
           <Navbar />
           {children}
           <AppUI />
+          <MidtransScript />
         </CartProvider>
       </body>
     </html>

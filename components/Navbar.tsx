@@ -1,3 +1,4 @@
+// Sticky navbar: logo, category links, live search, cart button, mobile menu.
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -25,6 +26,7 @@ export default function Navbar() {
 
   const isHome = pathname === "/";
 
+  // Live search results across product name, brand and category (max 6).
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return [];
@@ -36,6 +38,7 @@ export default function Navbar() {
     ).slice(0, 6);
   }, [query]);
 
+  // Solid navbar background after scrolling past 24px.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
@@ -43,6 +46,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close search when clicking outside the box.
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
@@ -53,6 +57,7 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
+  // Expand/collapse the search input and focus it when opened.
   const toggleSearch = () => {
     setSearchOpen((v) => {
       const next = !v;
@@ -61,6 +66,7 @@ export default function Navbar() {
     });
   };
 
+  // Navigate to a category and reset all navbar UI state.
   const goToCategory = (href: string) => {
     setQuery("");
     setSearchOpen(false);

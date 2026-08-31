@@ -1,3 +1,4 @@
+// Product tile: image, badge, rating, price + add-to-cart button.
 "use client";
 
 import { motion } from "framer-motion";

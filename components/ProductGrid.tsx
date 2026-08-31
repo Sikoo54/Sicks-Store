@@ -1,3 +1,4 @@
+// Responsive product grid with empty-state fallback.
 "use client";
 
 import { motion } from "framer-motion";

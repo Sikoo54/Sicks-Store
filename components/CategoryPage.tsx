@@ -1,3 +1,4 @@
+// Category listing: dark hero header + filterable product grid.
 "use client";
 
 import { useMemo, useState } from "react";
@@ -22,6 +23,7 @@ export default function CategoryPage({ meta, products }: CategoryPageProps) {
   const [sort, setSort] = useState<SortOption>("featured");
   const [selected, setSelected] = useState<Product | null>(null);
 
+  // Filter + sort the category's products client-side.
   const filtered = useMemo(() => {
     let list = [...products];
 

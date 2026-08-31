@@ -1,3 +1,4 @@
+// Global overlays mounted once: cart drawer + toast.
 "use client";
 
 import { AnimatePresence } from "framer-motion";

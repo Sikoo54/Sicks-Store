@@ -1,3 +1,4 @@
+// Grid of category tiles linking to each category page.
 "use client";
 
 import Link from "next/link";

@@ -1,3 +1,4 @@
+// Scrolling text strip: marketing words + category color separators.
 "use client";
 
 import { motion } from "framer-motion";

@@ -1,3 +1,4 @@
+// Resets scroll to top instantly on every route change.
 "use client";
 
 import { useEffect } from "react";

@@ -1,3 +1,4 @@
+// Product quick-view modal: color, size, qty selection → add to cart.
 "use client";
 
 import { useEffect, useState } from "react";
@@ -28,6 +29,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
     setQty(1);
   }, [product]);
 
+  // Lock body scroll + close on Escape while open.
   useEffect(() => {
     document.body.style.overflow = "hidden";
 
@@ -42,6 +44,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
     };
   }, [onClose]);
 
+  // Validate size, add to cart, close modal.
   const handleAdd = () => {
     if (!size) return;
     addItem(product, size, color, qty);

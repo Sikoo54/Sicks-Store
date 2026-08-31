@@ -1,3 +1,4 @@
+// Newsroom: editorial dark list of news items (The rundown).
 "use client";
 
 import { motion } from "framer-motion";

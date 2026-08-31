@@ -1,3 +1,5 @@
+// Shared types: product, cart, news, category meta + sort options.
+
 export type Category = "shoes" | "jerseys" | "shorts" | "shirts" | "other";
 
 export type SizeType = "us" | "letter" | "none";

@@ -1,3 +1,4 @@
+// Lenis smooth-scroll, desktop only (≥1024px), pauses when body scroll locks.
 "use client";
 
 import { useEffect, useState } from "react";
