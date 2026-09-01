@@ -70,6 +70,7 @@ export default function AdminDashboard() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<Product>(empty);
   const [editing, setEditing] = useState(false);
+  const [newColor, setNewColor] = useState("#111114");
   const [orderDetail, setOrderDetail] = useState<any | null>(null);
   const router = useRouter();
 
@@ -280,6 +281,33 @@ export default function AdminDashboard() {
               <label className="text-xs font-bold uppercase tracking-wider sm:col-span-2">Image URL <input value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} placeholder="/images/hero.jpg" className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
               {form.image && <div className="sm:col-span-2 relative h-40 overflow-hidden rounded-lg bg-chalk"><img src={form.image} alt="preview" className="h-full w-full object-contain" /></div>}
               <label className="text-xs font-bold uppercase tracking-wider sm:col-span-2">Tagline <input value={form.tagline || ""} onChange={(e) => setForm({ ...form, tagline: e.target.value })} placeholder="The drop is live." className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
+              {/* Colors picker */}
+              <div className="sm:col-span-2 rounded-lg border border-ink/10 p-3">
+                <p className="text-xs font-bold uppercase tracking-wider">Colors</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {(form.colors || []).map((c) => (
+                    <span key={c} className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-chalk px-2 py-1 text-xs">
+                      <span className="h-5 w-5 rounded-full border border-ink/10" style={{ backgroundColor: c }} />
+                      {c}
+                      <button onClick={() => setForm({ ...form, colors: (form.colors || []).filter((x) => x !== c) })} className="ml-1 grid h-5 w-5 place-items-center rounded-full hover:bg-white"><X size={12} /></button>
+                    </span>
+                  ))}
+                </div>
+                <div className="mt-3 flex items-center gap-2">
+                  <input type="color" value={newColor} onChange={(e) => setNewColor(e.target.value)} className="h-10 w-10 cursor-pointer rounded border p-1" />
+                  <span className="text-xs font-mono">{newColor}</span>
+                  <button
+                    onClick={() => {
+                      if (!newColor) return;
+                      if ((form.colors || []).includes(newColor)) return;
+                      setForm({ ...form, colors: [...(form.colors || []), newColor] });
+                    }}
+                    className="rounded-lg bg-ink px-4 py-2 text-xs font-bold uppercase text-white"
+                  >
+                    Add color
+                  </button>
+                </div>
+              </div>
               <label className="flex items-center gap-2 rounded-lg border border-ink/10 px-3 py-2.5 text-sm"><input type="checkbox" checked={!!form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} /> Featured (tampil di home)</label>
               <label className="flex items-center gap-2 rounded-lg border border-ink/10 px-3 py-2.5 text-sm"><input type="checkbox" checked={!!form.is_new} onChange={(e) => setForm({ ...form, is_new: e.target.checked })} /> Is New</label>
             </div>
