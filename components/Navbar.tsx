@@ -24,6 +24,8 @@ export default function Navbar() {
   const inputRef = useRef<HTMLInputElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
+  if (pathname.startsWith("/admin")) return null;
+
   const isHome = pathname === "/";
 
   // Live search results across product name, brand and category (max 6).
