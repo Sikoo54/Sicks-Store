@@ -18,7 +18,9 @@ import {
   TrendingUp,
   DollarSign,
   Eye,
+  Upload,
 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 type Product = {
   id: string;
@@ -71,8 +73,23 @@ export default function AdminDashboard() {
   const [form, setForm] = useState<Product>(empty);
   const [editing, setEditing] = useState(false);
   const [newColor, setNewColor] = useState("#111114");
+  const [uploading, setUploading] = useState(false);
   const [orderDetail, setOrderDetail] = useState<any | null>(null);
   const router = useRouter();
+
+  const handleUpload = async (file: File) => {
+    if (!file) return;
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await supabase.storage.from("product-images").upload(path, file, { cacheControl: "3600", upsert: false });
+    if (error) { setMsg(error.message); setUploading(false); return; }
+    const { data } = supabase.storage.from("product-images").getPublicUrl(path);
+    setForm({ ...form, image: data.publicUrl });
+    setMsg("Image uploaded!");
+    setUploading(false);
+    setTimeout(() => setMsg(""), 2000);
+  };
 
   const load = async () => {
     const r = await fetch("/api/admin/products");
@@ -278,7 +295,15 @@ export default function AdminDashboard() {
               <label className="text-xs font-bold uppercase tracking-wider sm:col-span-2">Name <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Air Jordan 4 Retro" className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
               <label className="text-xs font-bold uppercase tracking-wider">Brand <input value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })} className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
               <label className="text-xs font-bold uppercase tracking-wider">Price ($) <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
-              <label className="text-xs font-bold uppercase tracking-wider sm:col-span-2">Image URL <input value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} placeholder="/images/hero.jpg" className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
+              <label className="text-xs font-bold uppercase tracking-wider sm:col-span-2">Image
+                <div className="mt-1 flex gap-2">
+                  <input value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} placeholder="/images/hero.jpg atau https://...supabase.co/..." className="flex-1 rounded-lg border border-ink/15 px-3 py-2.5 text-sm" />
+                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-ink px-4 py-2.5 text-xs font-bold uppercase text-white hover:bg-ink/90">
+                    <Upload size={14} /> {uploading ? "..." : "Upload"}
+                    <input type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleUpload(f); }} disabled={uploading} />
+                  </label>
+                </div>
+              </label>
               {form.image && <div className="sm:col-span-2 relative h-40 overflow-hidden rounded-lg bg-chalk"><img src={form.image} alt="preview" className="h-full w-full object-contain" /></div>}
               <label className="text-xs font-bold uppercase tracking-wider sm:col-span-2">Tagline <input value={form.tagline || ""} onChange={(e) => setForm({ ...form, tagline: e.target.value })} placeholder="The drop is live." className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
               {/* Colors picker */}
