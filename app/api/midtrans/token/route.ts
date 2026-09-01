@@ -81,6 +81,19 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Simpan order ke Supabase (best-effort, jangan gagalkan payment kalau DB belum siap).
+  try {
+    const { supabaseServer } = await import("@/lib/supabase");
+    const sb = supabaseServer();
+    await sb.from("orders").insert({
+      order_id: orderId,
+      items,
+      total: grossAmount,
+      status: "pending",
+      customer_email: "customer@sicks.store",
+    });
+  } catch (_) {}
+
   // data = { token, redirect_url }
   return NextResponse.json(data);
 }
