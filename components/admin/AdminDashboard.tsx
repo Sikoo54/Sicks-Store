@@ -19,8 +19,20 @@ import {
   DollarSign,
   Eye,
   Upload,
+  Calendar,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from "recharts";
 
 type Product = {
   id: string;
@@ -122,6 +134,30 @@ export default function AdminDashboard() {
     };
   }, [products, orders]);
 
+  // Chart data: aggregate orders by date (last 7 days)
+  const chartData = useMemo(() => {
+    const map = new Map<string, { date: string; revenue: number; orders: number }>();
+    // init last 7 days
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const key = d.toLocaleDateString("id-ID", { day: "2-digit", month: "short" });
+      map.set(key, { date: key, revenue: 0, orders: 0 });
+    }
+    orders.forEach((o: any) => {
+      const d = new Date(o.created_at);
+      const key = d.toLocaleDateString("id-ID", { day: "2-digit", month: "short" });
+      const cur = map.get(key);
+      if (cur) {
+        cur.revenue += Number(o.total || 0) / 1000;
+        cur.orders += 1;
+      } else {
+        map.set(key, { date: key, revenue: Number(o.total || 0) / 1000, orders: 1 });
+      }
+    });
+    return Array.from(map.values());
+  }, [orders]);
+
   const openAdd = () => { setForm(empty); setEditing(false); setShowForm(true); };
   const openEdit = (p: Product) => { setForm(p); setEditing(true); setShowForm(true); };
 
@@ -182,30 +218,71 @@ export default function AdminDashboard() {
         {msg && <div className="mt-4 rounded-lg bg-cobalt px-4 py-2 text-sm font-semibold text-white">{msg}</div>}
 
         {tab === "overview" && (
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { label: "Total Products", value: stats.totalProducts, icon: Package, color: "bg-cobalt" },
-              { label: "Featured", value: stats.featured, icon: Star, color: "bg-orange" },
-              { label: "Orders", value: stats.totalOrders, icon: ShoppingCart, color: "bg-green" },
-              { label: "Revenue", value: `Rp ${(stats.revenue / 1000).toFixed(0)}k`, icon: DollarSign, color: "bg-violet" },
-            ].map((s) => (
-              <div key={s.label} className="rounded-2xl bg-white p-5 ring-1 ring-ink/10">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs font-bold uppercase tracking-wider text-ink/40">{s.label}</p>
-                  <span className={`grid h-9 w-9 place-items-center rounded-lg text-white ${s.color}`}><s.icon size={18} /></span>
+          <>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { label: "Total Products", value: stats.totalProducts, icon: Package, color: "bg-cobalt" },
+                { label: "Featured", value: stats.featured, icon: Star, color: "bg-orange" },
+                { label: "Orders", value: stats.totalOrders, icon: ShoppingCart, color: "bg-green" },
+                { label: "Revenue", value: `Rp ${(stats.revenue / 1000).toFixed(0)}k`, icon: DollarSign, color: "bg-violet" },
+              ].map((s) => (
+                <div key={s.label} className="rounded-2xl bg-white p-5 ring-1 ring-ink/10">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-bold uppercase tracking-wider text-ink/40">{s.label}</p>
+                    <span className={`grid h-9 w-9 place-items-center rounded-lg text-white ${s.color}`}><s.icon size={18} /></span>
+                  </div>
+                  <p className="mt-3 font-display text-3xl font-bold">{s.value}</p>
+                  <p className="mt-1 flex items-center gap-1 text-xs text-ink/40"><TrendingUp size={12} /> live from Supabase</p>
                 </div>
-                <p className="mt-3 font-display text-3xl font-bold">{s.value}</p>
-                <p className="mt-1 flex items-center gap-1 text-xs text-ink/40"><TrendingUp size={12} /> live from Supabase</p>
+              ))}
+            </div>
+
+            {/* Charts */}
+            <div className="mt-6 grid gap-4 lg:grid-cols-2">
+              <div className="rounded-2xl bg-white p-5 ring-1 ring-ink/10">
+                <div className="flex items-center gap-2">
+                  <Calendar size={16} className="text-ink/40" />
+                  <h3 className="font-display text-sm font-bold uppercase tracking-wide">Revenue — 7 hari terakhir (Rp k)</h3>
+                </div>
+                <div className="mt-4 h-56">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={chartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
+                      <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+                      <YAxis tick={{ fontSize: 11 }} />
+                      <Tooltip />
+                      <Area type="monotone" dataKey="revenue" stroke="#2B5CFF" fill="#2B5CFF22" strokeWidth={2} />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
-            ))}
-            <div className="sm:col-span-2 lg:col-span-4 rounded-2xl bg-ink p-6 text-chalk">
+              <div className="rounded-2xl bg-white p-5 ring-1 ring-ink/10">
+                <div className="flex items-center gap-2">
+                  <ShoppingCart size={16} className="text-ink/40" />
+                  <h3 className="font-display text-sm font-bold uppercase tracking-wide">Orders — 7 hari terakhir</h3>
+                </div>
+                <div className="mt-4 h-56">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={chartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
+                      <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+                      <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
+                      <Tooltip />
+                      <Bar dataKey="orders" fill="#0FA36B" radius={[6, 6, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 rounded-2xl bg-ink p-6 text-chalk">
               <h3 className="font-display text-lg font-bold uppercase">Quick actions</h3>
               <div className="mt-4 flex flex-wrap gap-2">
                 <button onClick={() => { setTab("products"); openAdd(); }} className="inline-flex items-center gap-2 bg-cobalt px-5 py-2.5 text-sm font-bold uppercase text-white"><Plus size={16} /> Add Product</button>
                 <button onClick={() => setTab("orders")} className="border border-white/20 px-5 py-2.5 text-sm font-bold uppercase">View Orders</button>
               </div>
             </div>
-          </div>
+          </>
         )}
 
         {tab === "products" && (
