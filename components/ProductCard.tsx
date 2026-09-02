@@ -58,6 +58,12 @@ export default function ProductCard({
           </span>
         )}
 
+        {product.number && (
+          <span className="absolute right-3 top-3 bg-ink px-2.5 py-1 font-display text-sm font-bold text-white">
+            #{product.number}
+          </span>
+        )}
+
         <span className="absolute bottom-3 left-3 bg-white px-2 py-0.5 font-display text-xs font-bold text-ink">
           №{String(index + 1).padStart(2, "0")}
         </span>

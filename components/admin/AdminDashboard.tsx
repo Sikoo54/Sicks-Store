@@ -49,6 +49,7 @@ type Product = {
   sizes?: string[];
   size_type?: string;
   tagline?: string;
+  number?: string;
 };
 
 const CAT_COLOR: Record<string, string> = {
@@ -73,6 +74,7 @@ const empty: Product = {
   sizes: ["M", "L"],
   size_type: "letter",
   tagline: "",
+  number: "",
 };
 
 export default function AdminDashboard() {
@@ -373,6 +375,9 @@ export default function AdminDashboard() {
               <label className="text-xs font-bold uppercase tracking-wider sm:col-span-2">Name <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Air Jordan 4 Retro" className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
               <label className="text-xs font-bold uppercase tracking-wider">Brand <input value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })} className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
               <label className="text-xs font-bold uppercase tracking-wider">Price ($) <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
+              {form.category === "jerseys" && (
+                <label className="text-xs font-bold uppercase tracking-wider">Number (punggung) <input value={form.number || ""} onChange={(e) => setForm({ ...form, number: e.target.value })} placeholder="23" className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
+              )}
               <label className="text-xs font-bold uppercase tracking-wider sm:col-span-2">Image
                 <div className="mt-1 flex gap-2">
                   <input value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} placeholder="/images/hero.jpg atau https://...supabase.co/..." className="flex-1 rounded-lg border border-ink/15 px-3 py-2.5 text-sm" />

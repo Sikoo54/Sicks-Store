@@ -17,6 +17,7 @@ function mapRow(r: any) {
     sizes: r.sizes ?? ["M"],
     sizeType: r.size_type ?? "letter",
     tagline: r.tagline ?? "",
+    number: r.number ?? "",
   };
 }
 
