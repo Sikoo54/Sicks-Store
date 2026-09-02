@@ -22,6 +22,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import Logo from "@/components/Logo";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -188,8 +189,8 @@ export default function AdminDashboard() {
       <div className="sticky top-0 z-20 border-b border-ink/10 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
-            <span className="grid h-9 w-9 place-items-center bg-cobalt text-white font-display font-bold">S</span>
-            <span className="font-display text-xl font-bold uppercase tracking-tight">SICKS <span className="font-normal text-ink/40">Admin</span></span>
+            <Logo size="sm" light={false} />
+            <span className="font-display text-sm font-bold uppercase tracking-[0.2em] text-ink/40">Admin</span>
           </div>
           <button onClick={logout} className="inline-flex items-center gap-2 rounded-lg border border-ink/15 px-4 py-2 text-sm font-semibold hover:bg-chalk">
             <LogOut size={16} /> Logout
