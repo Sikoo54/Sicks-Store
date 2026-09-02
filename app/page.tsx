@@ -1,7 +1,7 @@
 // Home page: hero → marquee → news → featured grid → video → categories → quote.
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence } from "framer-motion";
 import Hero from "@/components/Hero";
@@ -12,6 +12,7 @@ import ProductModal from "@/components/ProductModal";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
 import { FEATURED } from "@/lib/data";
+import type { Product as ProductType } from "@/types";
 
 const QuoteSection = dynamic(() => import("@/components/QuoteSection"), {
   ssr: false,
@@ -32,10 +33,24 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortOption>("featured");
   const [selected, setSelected] = useState<Product | null>(null);
+  const [featured, setFeatured] = useState<ProductType[]>(FEATURED);
+
+  // Load featured products from Supabase (live), fallback to static.
+  useEffect(() => {
+    fetch("/api/products")
+      .then((r) => r.json())
+      .then((data: ProductType[]) => {
+        if (Array.isArray(data) && data.length) {
+          const feat = data.filter((p) => p.featured);
+          if (feat.length) setFeatured(feat);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Filter + sort the featured drop client-side.
   const products = useMemo(() => {
-    let list = [...FEATURED];
+    let list = [...featured];
 
     const query = search.trim().toLowerCase();
     if (query) {
@@ -114,7 +129,7 @@ export default function Home() {
 
             <ProductGrid
               products={products}
-              total={FEATURED.length}
+              total={featured.length}
               onSelect={setSelected}
               onClear={() => {
                 setSearch("");
