@@ -17,14 +17,14 @@ function mapRow(r: any) {
     sizes: r.sizes ?? ["M"],
     sizeType: r.size_type ?? "letter",
     tagline: r.tagline ?? "",
-    number: r.number ?? "",
+    sortOrder: r.sort_order ?? 0,
   };
 }
 
 export async function GET() {
   try {
     const sb = supabaseServer();
-    const { data, error } = await sb.from("products").select("*").order("category");
+    const { data, error } = await sb.from("products").select("*").order("sort_order", { ascending: true });
     if (error) throw error;
     if (!data || data.length === 0) return NextResponse.json(PRODUCTS);
     return NextResponse.json(data.map(mapRow), {

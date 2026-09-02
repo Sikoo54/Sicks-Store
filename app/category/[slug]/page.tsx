@@ -44,7 +44,7 @@ function mapRow(r: any) {
     sizes: r.sizes ?? ["M"],
     sizeType: r.size_type ?? "letter",
     tagline: r.tagline ?? "",
-    number: r.number ?? "",
+    sortOrder: r.sort_order ?? 0,
   };
 }
 
@@ -59,7 +59,7 @@ export default async function CategoryRoute({
   // Try Supabase first, fallback to static data.
   try {
     const sb = supabaseServer();
-    const { data, error } = await sb.from("products").select("*").eq("category", meta.slug);
+    const { data, error } = await sb.from("products").select("*").eq("category", meta.slug).order("sort_order", { ascending: true });
     if (!error && data && data.length) {
       return <CategoryPage meta={meta} products={data.map(mapRow)} />;
     }

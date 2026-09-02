@@ -49,7 +49,7 @@ type Product = {
   sizes?: string[];
   size_type?: string;
   tagline?: string;
-  number?: string;
+  sort_order?: number;
 };
 
 const CAT_COLOR: Record<string, string> = {
@@ -74,7 +74,7 @@ const empty: Product = {
   sizes: ["M", "L"],
   size_type: "letter",
   tagline: "",
-  number: "",
+  sort_order: 0,
 };
 
 export default function AdminDashboard() {
@@ -117,14 +117,16 @@ export default function AdminDashboard() {
   useEffect(() => { load(); }, []);
 
   const filtered = useMemo(() => {
-    return products.filter((p) => {
-      if (catFilter !== "all" && p.category !== catFilter) return false;
-      if (search) {
-        const q = search.toLowerCase();
-        if (!p.name.toLowerCase().includes(q) && !p.brand.toLowerCase().includes(q) && !p.id.toLowerCase().includes(q)) return false;
-      }
-      return true;
-    });
+    return products
+      .filter((p) => {
+        if (catFilter !== "all" && p.category !== catFilter) return false;
+        if (search) {
+          const q = search.toLowerCase();
+          if (!p.name.toLowerCase().includes(q) && !p.brand.toLowerCase().includes(q) && !p.id.toLowerCase().includes(q)) return false;
+        }
+        return true;
+      })
+      .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
   }, [products, search, catFilter]);
 
   const stats = useMemo(() => {
@@ -312,6 +314,7 @@ export default function AdminDashboard() {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={p.image} alt={p.name} className="h-full w-full object-cover" />
                     <span className="absolute left-3 top-3 rounded bg-white px-2 py-1 text-[10px] font-bold uppercase" style={{ borderLeft: `4px solid ${CAT_COLOR[p.category] || "#111"}` }}>{p.category}</span>
+                    <span className="absolute left-3 bottom-3 rounded bg-ink px-2 py-1 text-[10px] font-bold text-white">#{p.sort_order ?? 0}</span>
                     {p.featured && <span className="absolute right-3 top-3 bg-orange px-2 py-1 text-[10px] font-bold uppercase text-ink">Featured</span>}
                   </div>
                   <div className="p-4">
@@ -375,9 +378,7 @@ export default function AdminDashboard() {
               <label className="text-xs font-bold uppercase tracking-wider sm:col-span-2">Name <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Air Jordan 4 Retro" className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
               <label className="text-xs font-bold uppercase tracking-wider">Brand <input value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })} className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
               <label className="text-xs font-bold uppercase tracking-wider">Price ($) <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
-              {form.category === "jerseys" && (
-                <label className="text-xs font-bold uppercase tracking-wider">Number (punggung) <input value={form.number || ""} onChange={(e) => setForm({ ...form, number: e.target.value })} placeholder="23" className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
-              )}
+              <label className="text-xs font-bold uppercase tracking-wider">No Urutan <input type="number" value={form.sort_order ?? 0} onChange={(e) => setForm({ ...form, sort_order: Number(e.target.value) })} placeholder="0" className="mt-1 w-full rounded-lg border border-ink/15 px-3 py-2.5 text-sm" /></label>
               <label className="text-xs font-bold uppercase tracking-wider sm:col-span-2">Image
                 <div className="mt-1 flex gap-2">
                   <input value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} placeholder="/images/hero.jpg atau https://...supabase.co/..." className="flex-1 rounded-lg border border-ink/15 px-3 py-2.5 text-sm" />

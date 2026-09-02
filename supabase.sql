@@ -15,7 +15,8 @@ create table if not exists products (
   colors text[] default '{}',
   sizes text[] default '{}',
   size_type text default 'letter' check (size_type in ('us','letter','none')),
-  tagline text
+  tagline text,
+  sort_order integer default 0
 );
 alter table products enable row level security;
 drop policy if exists "public read" on products;

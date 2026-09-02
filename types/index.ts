@@ -18,7 +18,7 @@ export interface Product {
   sizes: (number | string)[];
   sizeType: SizeType;
   tagline: string;
-  number?: string; // jersey number (e.g. "23")
+  sortOrder?: number;
 }
 
 export interface CartItem {

@@ -112,9 +112,8 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
               <span>{CATEGORY_META[product.category].label}</span>
             </div>
 
-            <h2 className="mt-2 flex items-center gap-3 font-display text-3xl font-bold uppercase tracking-tight sm:text-4xl">
+            <h2 className="mt-2 font-display text-3xl font-bold uppercase tracking-tight sm:text-4xl">
               {product.name}
-              {product.number && <span className="rounded bg-ink px-2.5 py-1 text-lg text-white">#{product.number}</span>}
             </h2>
 
             <p className="mt-2 text-sm text-ink/60">{product.tagline}</p>
