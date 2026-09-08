@@ -168,15 +168,33 @@ export default function AdminDashboard() {
 
   const save = async () => {
     if (!form.id || !form.name) { setMsg("ID dan name wajib diisi."); return; }
+    // Insert the product at the requested position then renumber the
+    // category 1..N so no two products share the same number.
+    const requested = Math.max(1, Number(form.sort_order ?? 0) || 1);
+    const others = products
+      .filter((p) => p.id !== form.id && p.category === form.category)
+      .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+    const pos = Math.min(requested - 1, others.length);
+    const ordered = [...others.slice(0, pos), { ...form }, ...others.slice(pos)];
     const method = editing ? "PUT" : "POST";
     const r = await fetch("/api/admin/products", {
       method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, sort_order: pos + 1 }),
     });
     const d = await r.json();
-    if (!r.ok) setMsg(d.error);
-    else { setMsg(editing ? "Produk diupdate!" : "Produk ditambahkan!"); setShowForm(false); setForm(empty); setEditing(false); load(); setTimeout(() => setMsg(""), 2000); }
+    if (!r.ok) { setMsg(d.error); return; }
+    // Renumber the rest of the category (excluding the saved product).
+    for (let i = 0; i < ordered.length; i++) {
+      if (ordered[i].id === form.id) continue;
+      await fetch("/api/admin/products", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: ordered[i].id, sort_order: i + 1 }),
+      });
+    }
+    setMsg(editing ? "Produk diupdate!" : "Produk ditambahkan!");
+    setShowForm(false); setForm(empty); setEditing(false); load(); setTimeout(() => setMsg(""), 2000);
   };
 
   const del = async (id: string) => {
