@@ -90,6 +90,8 @@ export default function AdminDashboard() {
   const [newColor, setNewColor] = useState("#111114");
   const [uploading, setUploading] = useState(false);
   const [orderDetail, setOrderDetail] = useState<any | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<Product | null>(null);
   const router = useRouter();
 
   const handleUpload = async (file: File) => {
@@ -197,10 +199,17 @@ export default function AdminDashboard() {
     setShowForm(false); setForm(empty); setEditing(false); load(); setTimeout(() => setMsg(""), 2000);
   };
 
-  const del = async (id: string) => {
-    if (!confirm("Hapus produk ini?")) return;
-    await fetch(`/api/admin/products?id=${id}`, { method: "DELETE" });
+  const askDelete = (p: Product) => setPendingDelete(p);
+
+  const confirmDelete = async () => {
+    if (!pendingDelete) return;
+    setDeleting(true);
+    await fetch(`/api/admin/products?id=${pendingDelete.id}`, { method: "DELETE" });
+    setPendingDelete(null);
+    setDeleting(false);
+    setMsg(`"${pendingDelete.name}" dihapus.`);
     load();
+    setTimeout(() => setMsg(""), 2000);
   };
 
   const logout = async () => { await fetch("/api/admin/logout", { method: "POST" }); router.push("/admin/login"); };
@@ -345,7 +354,7 @@ export default function AdminDashboard() {
                     </div>
                     <div className="mt-3 flex gap-2">
                       <button onClick={() => openEdit(p)} className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-ink/15 py-2 text-xs font-bold uppercase hover:bg-chalk"><Pencil size={14} /> Edit</button>
-                      <button onClick={() => del(p.id)} className="flex items-center justify-center gap-1 rounded-lg bg-red-50 px-3 py-2 text-xs font-bold uppercase text-red-600 hover:bg-red-100"><Trash2 size={14} /></button>
+                      <button onClick={() => askDelete(p)} className="flex items-center justify-center gap-1 rounded-lg bg-red-50 px-3 py-2 text-xs font-bold uppercase text-red-600 hover:bg-red-100"><Trash2 size={14} /></button>
                     </div>
                   </div>
                 </div>
@@ -441,6 +450,26 @@ export default function AdminDashboard() {
             <div className="mt-6 flex gap-2">
               <button onClick={save} className="flex-1 bg-ink py-3 text-sm font-bold uppercase tracking-wide text-white hover:bg-cobalt">{editing ? "Update" : "Add Product"}</button>
               <button onClick={() => setShowForm(false)} className="border border-ink/15 px-6 py-3 text-sm font-bold uppercase">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete confirm modal */}
+      {pendingDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm" onClick={() => setPendingDelete(null)}>
+          <div className="w-full max-w-sm overflow-hidden rounded-2xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="h-1.5 bg-red-600" />
+            <div className="p-6 text-center">
+              <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-red-50 text-red-600"><Trash2 size={24} /></span>
+              <h3 className="mt-4 font-display text-xl font-bold uppercase tracking-tight">Hapus produk?</h3>
+              <p className="mt-2 text-sm text-ink/55">
+                <span className="font-bold text-ink">{pendingDelete.name}</span> akan dihapus permanen dari Supabase dan hilang dari toko. Tidak bisa dibatalkan.
+              </p>
+              <div className="mt-6 flex gap-2">
+                <button onClick={() => setPendingDelete(null)} disabled={deleting} className="flex-1 rounded-lg border border-ink/15 py-2.5 text-sm font-bold uppercase hover:bg-chalk">Batal</button>
+                <button onClick={confirmDelete} disabled={deleting} className="flex-1 rounded-lg bg-red-600 py-2.5 text-sm font-bold uppercase text-white hover:bg-red-700 disabled:opacity-60">{deleting ? "Menghapus..." : "Ya, hapus"}</button>
+              </div>
             </div>
           </div>
         </div>
