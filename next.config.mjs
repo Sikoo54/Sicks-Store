@@ -5,6 +5,14 @@ const nextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 31536000,
+    // Allow product images uploaded to Supabase Storage.
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "mihkbyarybqnefxmooau.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
   },
 };
 
