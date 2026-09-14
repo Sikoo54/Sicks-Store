@@ -68,7 +68,7 @@ export default function Hero() {
             className="inline-flex items-center gap-2 border border-chalk/20 bg-white/5 px-3.5 py-1.5 font-display text-xs font-semibold uppercase tracking-[0.2em]"
           >
             <span className="h-2 w-2 bg-cobalt" />
-            FW26 · New drop live
+            Jordan 4 Comic · New drop live
           </motion.div>
 
           <motion.h1 className="mt-7 font-display font-bold uppercase leading-[0.9] tracking-tight">
