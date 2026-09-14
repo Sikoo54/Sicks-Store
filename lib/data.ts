@@ -4,7 +4,7 @@ import type { Category, CategoryMeta, NewsItem, Product } from "@/types";
 // Maps a public image filename to its URL path.
 const img = (file: string) => `/images/${file}`;
 
-export const HERO_IMAGE = img("jordan-4-2.avif");
+export const HERO_IMAGE = img("jordan-4.avif");
 export const HERO_SECONDARY_IMAGE = img("vapor-glide.jpg");
 export const courtSurgeImage = img("court-surge-01.jpg");
 

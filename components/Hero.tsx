@@ -155,15 +155,15 @@ export default function Hero() {
             <div className="absolute -right-4 top-8 w-36 -rotate-6 animate-float-y bg-orange px-4 py-3 font-display font-bold uppercase leading-tight text-ink shadow-card sm:-right-8">
               New drop
               <span className="block text-xs font-semibold tracking-wider opacity-70">
-                jordan 4
+                Jordan 4 Comic
               </span>
             </div>
 
             <div className="absolute -left-4 bottom-10 w-40 rotate-3 bg-chalk px-4 py-3 text-ink shadow-card sm:-left-8">
               <p className="text-[10px] font-bold uppercase tracking-wider text-ink/50">
-                jordan 4 'Comic'
+                Air Jordan 4 Retro &apos;Comic&apos;
               </p>
-              <p className="font-display text-2xl font-bold">$249</p>
+              <p className="font-display text-2xl font-bold">$189</p>
             </div>
           </div>
         </div>
