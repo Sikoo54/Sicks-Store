@@ -2,6 +2,7 @@
 // POST { items, orderId? } -> { token, redirect_url }
 
 import { NextRequest, NextResponse } from "next/server";
+import { usdToIdr } from "@/lib/midtrans";
 
 // Use native fetch to Midtrans API (no extra SDK init needed for edge compat).
 // Docs: https://docs.midtrans.com/reference/create-snap-token
@@ -26,13 +27,30 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Cart kosong." }, { status: 400 });
   }
 
-  // Gross amount: sum of item price * qty. Jika clientTotal dikirim, pakai itu (sudah termasuk shipping).
-  const grossAmount =
-    typeof clientTotal === "number" && clientTotal > 0
-      ? Math.round(clientTotal * 1000) // USD -> IDR approx (contoh: $89 -> 89000). Sesuaikan kurs kalau perlu.
-      : Math.round(
-          items.reduce((s, i) => s + i.product.price * i.qty, 0) * 1000
-        );
+  // Total dalam USD (produk + ongkir), lalu dikonversi ke IDR pakai kurs.
+  const itemsUsd = items.reduce((s, i) => s + i.product.price * i.qty, 0);
+  const totalUsd =
+    typeof clientTotal === "number" && clientTotal > 0 ? clientTotal : itemsUsd;
+
+  const itemDetails = items.map((i) => ({
+    id: i.product.name.slice(0, 50),
+    name: `${i.product.name} (${i.size})`.slice(0, 50),
+    price: usdToIdr(i.product.price),
+    quantity: i.qty,
+  }));
+
+  const itemSum = itemDetails.reduce((s, d) => s + d.price * d.quantity, 0);
+  let grossAmount = usdToIdr(totalUsd);
+
+  // Midtrans mewajibkan gross_amount == jumlah item_details.
+  // Selisih (ongkir / pembulatan kurs) dimasukkan sebagai item "Shipping",
+  // atau gross_amount disamakan kalau selisihnya negatif karena pembulatan.
+  const shipping = grossAmount - itemSum;
+  if (shipping > 0) {
+    itemDetails.push({ id: "shipping", name: "Shipping", price: shipping, quantity: 1 });
+  } else if (shipping < 0) {
+    grossAmount = itemSum;
+  }
 
   const orderId = body?.orderId || `SICKS-${Date.now()}`;
 
@@ -41,12 +59,7 @@ export async function POST(req: NextRequest) {
       order_id: orderId,
       gross_amount: grossAmount,
     },
-    item_details: items.map((i) => ({
-      id: i.product.name.slice(0, 50),
-      name: `${i.product.name} (${i.size})`.slice(0, 50),
-      price: Math.round(i.product.price * 1000),
-      quantity: i.qty,
-    })),
+    item_details: itemDetails,
     customer_details: {
       first_name: "SICKS Customer",
       email: "customer@sicks.store",

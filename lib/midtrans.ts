@@ -23,6 +23,12 @@ export function midtransAuthHeader() {
   return `Basic ${Buffer.from(`${key}:`).toString("base64")}`;
 }
 
+// Kurs USD -> IDR untuk Midtrans. Override lewat env USD_IDR_RATE.
+export function usdToIdr(usd: number) {
+  const rate = Number(process.env.USD_IDR_RATE) || 16500;
+  return Math.round(usd * rate);
+}
+
 // Signature key dari notifikasi Midtrans:
 // SHA512(order_id + status_code + gross_amount + server_key)
 export function midtransSignature(orderId: string, statusCode: string, grossAmount: string) {
