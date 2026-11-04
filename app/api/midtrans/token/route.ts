@@ -95,5 +95,5 @@ export async function POST(req: NextRequest) {
   } catch (_) {}
 
   // data = { token, redirect_url }
-  return NextResponse.json(data);
+  return NextResponse.json({ ...data, orderId });
 }

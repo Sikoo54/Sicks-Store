@@ -20,6 +20,7 @@ import {
   Eye,
   Upload,
   Calendar,
+  RefreshCw,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import Logo from "@/components/Logo";
@@ -60,6 +61,15 @@ const CAT_COLOR: Record<string, string> = {
   other: "#E0301E",
 };
 
+const STATUS_STYLE: Record<string, string> = {
+  paid: "bg-green/10 text-green",
+  pending: "bg-amber-100 text-amber-700",
+  expired: "bg-ink/10 text-ink/60",
+  cancelled: "bg-ink/10 text-ink/60",
+  failed: "bg-red/10 text-red",
+  refunded: "bg-violet/10 text-violet",
+};
+
 const empty: Product = {
   id: "",
   name: "",
@@ -92,6 +102,7 @@ export default function AdminDashboard() {
   const [orderDetail, setOrderDetail] = useState<any | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<Product | null>(null);
+  const [syncing, setSyncing] = useState<string | null>(null);
   const router = useRouter();
 
   const handleUpload = async (file: File) => {
@@ -210,6 +221,33 @@ export default function AdminDashboard() {
     setMsg(`"${pendingDelete.name}" dihapus.`);
     load();
     setTimeout(() => setMsg(""), 2000);
+  };
+
+  const syncOrders = async (orderId?: string) => {
+    setSyncing(orderId || "all");
+    try {
+      const r = await fetch("/api/admin/orders/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderId ? { orderId } : {}),
+      });
+      const d = await r.json();
+      if (!r.ok) {
+        setMsg(d.error || "Gagal sync status.");
+      } else {
+        const checked = (d.results || []).filter((x: any) => x.status).length;
+        const failed = (d.results || []).filter((x: any) => x.error).length;
+        setMsg(
+          `Sync selesai — ${checked} dicek${failed ? `, ${failed} gagal` : ""}.`
+        );
+        if (orderDetail) setOrderDetail(null);
+        load();
+      }
+    } catch {
+      setMsg("Gagal sync status.");
+    }
+    setSyncing(null);
+    setTimeout(() => setMsg(""), 3000);
   };
 
   const logout = async () => { await fetch("/api/admin/logout", { method: "POST" }); router.push("/admin/login"); };
@@ -366,7 +404,20 @@ export default function AdminDashboard() {
 
         {tab === "orders" && (
           <div className="mt-6 overflow-hidden rounded-2xl bg-white ring-1 ring-ink/10">
-            <div className="border-b bg-chalk/30 px-5 py-4"><h2 className="font-display font-bold uppercase">Recent Orders</h2><p className="text-xs text-ink/50">From Midtrans → Supabase</p></div>
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b bg-chalk/30 px-5 py-4">
+              <div>
+                <h2 className="font-display font-bold uppercase">Recent Orders</h2>
+                <p className="text-xs text-ink/50">Dari Midtrans → Supabase. Status diupdate otomatis via webhook.</p>
+              </div>
+              <button
+                onClick={() => syncOrders()}
+                disabled={syncing !== null}
+                className="inline-flex items-center gap-2 rounded-lg border border-ink/15 bg-white px-3 py-2 text-xs font-bold uppercase hover:bg-chalk disabled:opacity-60"
+              >
+                <RefreshCw size={14} className={syncing === "all" ? "animate-spin" : ""} />
+                {syncing === "all" ? "Syncing..." : "Sync pending"}
+              </button>
+            </div>
             {orders.length === 0 ? <p className="p-8 text-center text-sm text-ink/40">Belum ada order.</p> : (
               <div className="overflow-auto">
                 <table className="w-full text-left text-sm">
@@ -376,9 +427,14 @@ export default function AdminDashboard() {
                       <tr key={o.id} className="border-b hover:bg-chalk/20">
                         <td className="px-4 py-3 font-mono text-xs">{o.order_id}</td>
                         <td className="px-4 py-3 font-semibold">Rp {Number(o.total).toLocaleString("id-ID")}</td>
-                        <td className="px-4 py-3"><span className={`rounded px-2 py-1 text-xs font-bold uppercase ${o.status === "pending" ? "bg-amber-100 text-amber-700" : "bg-green-100 text-green-700"}`}>{o.status}</span></td>
+                        <td className="px-4 py-3"><span className={`rounded px-2 py-1 text-xs font-bold uppercase ${STATUS_STYLE[o.status] || "bg-ink/10 text-ink/60"}`}>{o.status}</span></td>
                         <td className="px-4 py-3 text-xs text-ink/50">{new Date(o.created_at).toLocaleString("id-ID")}</td>
-                        <td className="px-4 py-3"><button onClick={() => setOrderDetail(o)} className="inline-flex items-center gap-1 text-xs font-bold text-cobalt hover:underline"><Eye size={14} /> Detail</button></td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-3">
+                            <button onClick={() => setOrderDetail(o)} className="inline-flex items-center gap-1 text-xs font-bold text-cobalt hover:underline"><Eye size={14} /> Detail</button>
+                            <button onClick={() => syncOrders(o.order_id)} disabled={syncing !== null} className="inline-flex items-center gap-1 text-xs font-bold text-ink/60 hover:text-ink disabled:opacity-50"><RefreshCw size={13} className={syncing === o.order_id ? "animate-spin" : ""} /> Cek</button>
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -480,7 +536,8 @@ export default function AdminDashboard() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm" onClick={() => setOrderDetail(null)}>
           <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between"><h3 className="font-display font-bold uppercase">Order {orderDetail.order_id}</h3><button onClick={() => setOrderDetail(null)} className="grid h-8 w-8 place-items-center rounded-lg hover:bg-chalk"><X size={16} /></button></div>
-            <div className="mt-4 space-y-2 text-sm"><p><span className="text-ink/50">Status:</span> <span className="font-bold">{orderDetail.status}</span></p><p><span className="text-ink/50">Total:</span> Rp {Number(orderDetail.total).toLocaleString("id-ID")}</p><p><span className="text-ink/50">Date:</span> {new Date(orderDetail.created_at).toLocaleString("id-ID")}</p></div>
+            <div className="mt-4 space-y-2 text-sm"><p><span className="text-ink/50">Status:</span> <span className={`ml-1 rounded px-2 py-0.5 text-xs font-bold uppercase ${STATUS_STYLE[orderDetail.status] || "bg-ink/10 text-ink/60"}`}>{orderDetail.status}</span></p><p><span className="text-ink/50">Total:</span> Rp {Number(orderDetail.total).toLocaleString("id-ID")}</p><p><span className="text-ink/50">Date:</span> {new Date(orderDetail.created_at).toLocaleString("id-ID")}</p></div>
+            <button onClick={() => syncOrders(orderDetail.order_id)} disabled={syncing !== null} className="mt-4 inline-flex items-center gap-2 rounded-lg border border-ink/15 px-3 py-2 text-xs font-bold uppercase hover:bg-chalk disabled:opacity-60"><RefreshCw size={14} className={syncing === orderDetail.order_id ? "animate-spin" : ""} /> Cek status ke Midtrans</button>
             <div className="mt-4 rounded-lg bg-chalk p-3"><p className="text-xs font-bold uppercase">Items</p><pre className="mt-2 max-h-60 overflow-auto text-xs">{JSON.stringify(orderDetail.items, null, 2)}</pre></div>
           </div>
         </div>

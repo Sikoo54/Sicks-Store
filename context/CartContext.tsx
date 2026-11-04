@@ -174,6 +174,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       window.snap.pay(token, {
         onSuccess: () => {
+          // Sinkron status order ke DB (fallback kalau webhook telat).
+          if (data.orderId) {
+            fetch("/api/midtrans/confirm", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ orderId: data.orderId }),
+            }).catch(() => {});
+          }
           setItems([]);
           setIsOpen(false);
           showToast("Pembayaran berhasil — thanks for shopping SICKS!");
