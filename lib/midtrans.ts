@@ -25,7 +25,7 @@ export function midtransAuthHeader() {
 
 // Kurs USD -> IDR untuk Midtrans. Override lewat env USD_IDR_RATE.
 export function usdToIdr(usd: number) {
-  const rate = Number(process.env.USD_IDR_RATE) || 16500;
+  const rate = Number(process.env.USD_IDR_RATE) || 18116.7;
   return Math.round(usd * rate);
 }
 
